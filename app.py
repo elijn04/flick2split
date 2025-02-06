@@ -2,11 +2,13 @@ import streamlit as st
 from utils.ai_model import ai_return
 from utils.image_preprocessing import preprocess_image
 from utils.data_processing import manually_parse_to_dict
-from utils.user_confirmation import user_confirmation
+from pages.receipt_confirmation import user_confirmation
 import time
 
-# Hide sidebar with CSS
+# Set page config must be the first Streamlit command
 st.set_page_config(initial_sidebar_state="collapsed")
+
+# Then other Streamlit commands can follow
 st.markdown(
     """
     <style>
@@ -19,18 +21,30 @@ st.markdown(
 )
 
 # Title and Description
-st.title("Welcome to Flick2Split")
-st.markdown(
-    """
-    ### The Best Bill Splitting App for Meals with Friends
-    Upload an image of your receipt, and we’ll help you split the bill among your group in seconds!
-    """
-)
+st.title("Flick2Split!")
 
-# Image uploader
-image_file = st.file_uploader(label="Upload your receipt here", type=["png", "jpg", "jpeg", "heic"])
+st.markdown("""
+    ### Split Bills with Friends Effortlessly!
+    Just snap a photo of your receipt and we'll do the rest.
+""")
 
-if image_file:
+# Center the upload area using columns
+if 'image_file' not in st.session_state:
+    st.session_state.image_file = None
+
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    if st.session_state.image_file is None:
+        image_file = st.file_uploader(
+            "📸 Upload Receipt",
+            type=["png", "jpg", "jpeg", "heic"],
+            help="Supported formats: PNG, JPG, JPEG, HEIC"
+        )
+        if image_file is not None:
+            st.session_state.image_file = image_file
+
+if st.session_state.image_file is not None:
+    image_file = st.session_state.image_file
     # Validate file type
     if image_file.type not in ["image/png", "image/jpeg", "image/jpg", "image/heic"]:
         st.error("Invalid file type. Please upload a PNG, JPG, JPEG, or HEIC file.")
@@ -47,26 +61,12 @@ if image_file:
             # Manually parse the AI output
             processed_receipt_data = manually_parse_to_dict(receipt_data)
             
-            # Set the processed_receipt_data in the session state
-            #st.session_state.processed_receipt_data = processed_receipt_data
-
-            # Get user confirmation and updates
-            updated_data = user_confirmation(processed_receipt_data)
+            # Store the initial receipt data
+            st.session_state.receipt_data = processed_receipt_data
             
-            if updated_data != None: 
-                if st.button("Continue"):
-                    if updated_data != processed_receipt_data:
-                        st.success("Changes saved!")
-                        time.sleep(1)
-                    st.write("Switching Page ...")
-                    # Store updated_data in session state
-                    if updated_data is not None:
-                        st.session_state.updated_data = updated_data
-
-                    st.switch_page("pages/item_display.py")
-                    
+            if st.button("Calculate tip & split"):
+                st.switch_page("pages/receipt_confirmation.py")
             
-
     except Exception as error:
         st.error(f"An error occurred: {error}")
         st.error(f"Details: {str(error)}")

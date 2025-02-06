@@ -1,6 +1,23 @@
 import streamlit as st
 import pandas as pd
 
+# Add page config at the top
+st.set_page_config(
+    page_title="Review Receipt",
+    initial_sidebar_state="collapsed"
+)
+
+# Hide sidebar with CSS
+st.markdown(
+    """
+    <style>
+        [data-testid="collapsedControl"] {
+            display: none
+        }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 def edit_dictionary(processed_receipt_data):
     """
@@ -74,6 +91,7 @@ def edit_dictionary(processed_receipt_data):
         tip_dollar = subtotal * st.session_state.tips / 100
         st.write(f"**Tip = ${tip_dollar:.2f}**")
         
+        st.header("Check your totals")
         # Display Subtotal, Tax, and Total in columns
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -114,22 +132,34 @@ def edit_dictionary(processed_receipt_data):
         
         # Only show items editor when show_items is True
         if st.session_state.show_items:
-            st.write("**Click on the item to edit then press continue when done**")
+            st.write("**Press continue when done editing**")
             items_df = pd.DataFrame(processed_receipt_data["items"])
             edited_items_df = st.data_editor(items_df, num_rows="dynamic", use_container_width=True)
             
             # Check if data is missing
+            has_invalid_data = False
             if edited_items_df.isnull().values.any():
                 st.warning("Some item details are missing. Please fill in all the details.")
                 if len(edited_items_df) > len(items_df):
                     st.error("A new item row has been added. Please fill in all details. If this was accidental, enter 'None' for the name and '0' for both quantity and price.")
-
+                has_invalid_data = True
+                return None  # Exit early if there's invalid data
+            
+            # Only continue if data is valid
             updated_items = edited_items_df.to_dict("records")
+            # Recalculate subtotal based on edited items
+            new_subtotal = sum(item.get("Price", 0) for item in updated_items)
+            # Recalculate total with new subtotal
+            tip_dollar = new_subtotal * st.session_state.tips / 100
+            total = new_subtotal + updated_tax + tip_dollar
+            
+            # Only show updated values if items have changed
+            if processed_receipt_data["items"] != updated_items:
+                st.write(f"Updated Subtotal: **${new_subtotal:.2f}**")
+                st.write(f"Updated Tip: **${tip_dollar:.2f}**")
+                st.write(f"Updated Total (tip & tax included): **${total:.2f}**")
         else:
             updated_items = processed_receipt_data["items"]
-
-        if processed_receipt_data["items"] != updated_items:
-            st.write("**Subtotal & Total were updated based on the changes you made**")
 
         # Check if subtotal or total is 0
         if new_subtotal == 0 or new_total == 0:
@@ -166,3 +196,22 @@ def user_confirmation(processed_receipt_data):
 
     updated_data = edit_dictionary(processed_receipt_data)
     return updated_data
+
+# Modify the main flow at the bottom of the file
+if __name__ == "__main__":
+    
+    # Check if we have receipt data in session state
+    if "receipt_data" not in st.session_state:
+        st.error("No receipt data found. Please upload a receipt first.")
+        if st.button("Return to Upload"):
+            st.switch_page("app.py")
+    else:
+        updated_data = user_confirmation(st.session_state.receipt_data)
+        
+        if updated_data:
+            # Store the updated data in session state
+            st.session_state.updated_receipt_data = updated_data
+            
+            # Add a continue button
+            if st.button("Continue to Shared Items"):
+                st.switch_page("pages/2_shared_items.py")

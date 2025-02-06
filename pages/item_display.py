@@ -20,7 +20,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("Flick to Split 🧾")
+st.title("Flick to Split")
 
 # Add some spacing for better readability
 st.write("---")  # Horizontal line for visual separation
@@ -28,16 +28,16 @@ st.write("---")  # Horizontal line for visual separation
 # Debugging: Check if updated_data exists
 # st.write("Session State Keys:", list(st.session_state.keys()))  # Debugging output
 
-if 'updated_data' in st.session_state and st.session_state.updated_data:
-    updated_data = st.session_state.updated_data
-    # st.write("Updated Data:", updated_data)  # Debugging output
+if 'shared_updated_receipt_data' in st.session_state and st.session_state.shared_updated_receipt_data:
+    receipt_data = st.session_state.shared_updated_receipt_data
+    # st.write("Receipt Data:", receipt_data)  # Debugging output
 
     # Gather user data and create a Guest object
-    guest = gather_user_data(updated_data)
+    guest = gather_user_data(receipt_data)
 
     # Assuming st.session_state.guests is a list of guest objects
     if st.session_state.guests:
-        for guest in st.session_state.guests:
+        for guest in reversed(st.session_state.guests):
             # Use columns to display the super summary and expander neatly
             col1, col2 = st.columns([0.8, 0.2])
             
@@ -51,24 +51,13 @@ if 'updated_data' in st.session_state and st.session_state.updated_data:
                 # Create an expander for the detailed summary
                 with st.expander("🔍"):
                     guest.display_summary()
-        
-        # Add a horizontal line for separation
-        st.write("---")
-        
-    
-        
-        # Add a button to reset or go back
-        if st.button("Reset and Return to Home"):
-            st.session_state.updated_data = None  # Reset session state
-            st.switch_page("app.py")
-            st.rerun()
 
 else:
     # Display an error message with better spacing
-    st.error("No updated data found. Please return to the home page and upload a receipt.")
+    st.error("No receipt data found. Please return to the home page and upload a receipt.")
     
     # Add a button to return to the home page
     if st.button("Return to Home"):
-        st.session_state.updated_data = None  # Reset session state
+        st.session_state.shared_updated_receipt_data = None  # Reset session state
         st.switch_page("app.py")
         st.rerun()
