@@ -2,13 +2,14 @@ import streamlit as st
 from utils.ai_model import ai_return
 from utils.image_preprocessing import preprocess_image
 from utils.data_processing import manually_parse_to_dict
-from pages.receipt_confirmation import user_confirmation
 import time
 
 # Set page config must be the first Streamlit command
-st.set_page_config(initial_sidebar_state="collapsed")
+st.set_page_config(
+    page_title="Flick2Split"
+)
 
-# Then other Streamlit commands can follow
+# Hide sidebar with CSS
 st.markdown(
     """
     <style>
@@ -64,7 +65,7 @@ if st.session_state.image_file is not None:
             # Store the initial receipt data
             st.session_state.receipt_data = processed_receipt_data
             
-            if st.button("Calculate tip & split"):
+            if st.button("Confirm Receipt"):
                 st.switch_page("pages/receipt_confirmation.py")
             
     except Exception as error:

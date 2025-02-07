@@ -28,3 +28,7 @@ class Guest:
     
     def display_super_summary(self):
         st.write(f"**{self.name}'s** Total Owed: **${self.total:.2f}**")
+
+    def get_items_for_return(self):
+        """Return items in the format needed for the available items list"""
+        return [{"Name": item["name"], "Quantity": 1, "Price": item["price"]} for item in self.items]

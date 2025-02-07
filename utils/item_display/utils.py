@@ -100,7 +100,7 @@ def gather_user_data(updated_data):
     initialize_session_state()
 
     # Check if there are any items left to select
-    if not updated_data["items"]:
+    if not updated_data.get("items", []):
         return None  # Return early if no items are left
 
     # Step 1: Ask the user to enter their name
@@ -139,3 +139,4 @@ def gather_user_data(updated_data):
                 st.rerun()  # Refresh the page to hide the form
 
         return guest
+    return None

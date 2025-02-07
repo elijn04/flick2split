@@ -1,6 +1,7 @@
 import streamlit as st
 from utils.item_display.session_state import initialize_session_state
 from utils.item_display.utils import gather_user_data
+from utils.item_display.item import Item
 
 # Initialize session state
 initialize_session_state()
@@ -37,8 +38,12 @@ if 'shared_updated_receipt_data' in st.session_state and st.session_state.shared
 
     # Assuming st.session_state.guests is a list of guest objects
     if st.session_state.guests:
+        # Keep track of available items
+        if 'available_items' not in st.session_state:
+            st.session_state.available_items = []
+
         for guest in reversed(st.session_state.guests):
-            # Use columns to display the super summary and expander neatly
+            # Use columns to display the super summary and expanders neatly
             col1, col2 = st.columns([0.8, 0.2])
             
             with col1:
@@ -46,11 +51,17 @@ if 'shared_updated_receipt_data' in st.session_state and st.session_state.shared
                 guest.display_super_summary()
             
             with col2:
-                # Add a small spacer for better alignment
-                st.write("")  # Empty space
                 # Create an expander for the detailed summary
                 with st.expander("🔍"):
                     guest.display_summary()
+
+    # Add navigation buttons at the bottom
+    if st.button("← Back"):
+        # Clear relevant session state data
+        st.session_state.shared_updated_receipt_data = None
+        st.session_state.guests = []  # Clear guests list
+        st.session_state.item_display_back_pressed = True
+        st.switch_page("pages/2_shared_items.py")
 
 else:
     # Display an error message with better spacing
@@ -60,4 +71,3 @@ else:
     if st.button("Return to Home"):
         st.session_state.shared_updated_receipt_data = None  # Reset session state
         st.switch_page("app.py")
-        st.rerun()

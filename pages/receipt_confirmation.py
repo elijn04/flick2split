@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# Add page config at the top
+# Set page config must be the first Streamlit command
 st.set_page_config(
     page_title="Review Receipt",
     initial_sidebar_state="collapsed"
@@ -89,7 +89,7 @@ def edit_dictionary(processed_receipt_data):
     if st.session_state.get("tips_interacted", False):
         
         tip_dollar = subtotal * st.session_state.tips / 100
-        st.write(f"**Tip = ${tip_dollar:.2f}**")
+        st.markdown(f"**Tip** <small>(based on subtotal)</small> = **${tip_dollar:.2f}**", unsafe_allow_html=True)
         
         st.header("Check your totals")
         # Display Subtotal, Tax, and Total in columns
@@ -212,6 +212,6 @@ if __name__ == "__main__":
             # Store the updated data in session state
             st.session_state.updated_receipt_data = updated_data
             
-            # Add a continue button
-            if st.button("Continue to Shared Items"):
+        
+            if st.button("Continue to Shared Items →"):
                 st.switch_page("pages/2_shared_items.py")

@@ -111,11 +111,17 @@ else:
             
             shared_receipt['items'] = new_items
             st.session_state.shared_updated_receipt_data = shared_receipt
-            
-            
-            if st.button("Continue"):
+            if st.button("Continue →"):
                 st.switch_page("pages/item_display.py")
-    
+
+        # Add some spacing
+        for line in range(7):
+            st.write("")
+
+        # Navigation button at the very bottom
+        if st.button("← Back"):
+            st.switch_page("pages/receipt_confirmation.py")
+
     elif shared_items_response == "No":
         # If no shared items, just copy the original receipt data
         st.session_state.shared_updated_receipt_data = (
@@ -124,3 +130,10 @@ else:
         st.session_state.shared_items = []
         if st.button("Continue"):
             st.switch_page("pages/item_display.py") 
+
+        for line in range(16):
+            st.write("")
+
+        # Navigation button at the very bottom
+        if st.button("← Back"):
+            st.switch_page("pages/receipt_confirmation.py")
