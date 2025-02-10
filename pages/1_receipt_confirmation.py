@@ -75,7 +75,7 @@ def main():
             "items": edited_items.to_dict("records")
         }
         st.session_state.updated_data = updated_data
-        st.switch_page("pages/2_shared_items.py")
+        st.switch_page("pages/2_Shared_Items.py")
 
 if __name__ == "__main__":
     main() 

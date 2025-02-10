@@ -129,7 +129,7 @@ else:
         )
         st.session_state.shared_items = []
         if st.button("Continue"):
-            st.switch_page("pages/item_display.py") 
+            st.switch_page("pages/3_item_display.py")
 
         for line in range(16):
             st.write("")
