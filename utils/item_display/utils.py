@@ -9,6 +9,12 @@ def get_guest_name():
     Returns:
         str: The name of the guest, or None if no name is entered.
     """
+    # Check if we need to clear the name input
+    if st.session_state.get('clear_name', False):
+        st.session_state.clear_name = False
+        # Initialize with empty value
+        st.session_state['name'] = ''
+    
     guest_name = st.text_input("Enter your name:", key="name", placeholder="Enter name here")
     
     # Strip any leading/trailing whitespace and format the name
@@ -84,6 +90,8 @@ def handle_submission(guest, selected_items, updated_data):
                 break
 
     if selected_items:
+        # Instead of directly modifying the name input, set a flag to clear it on next render
+        st.session_state.clear_name = True
         st.rerun()  # Refresh the page for the next guest
 
 def gather_user_data(updated_data):
