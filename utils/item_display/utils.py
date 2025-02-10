@@ -108,10 +108,7 @@ def gather_user_data(updated_data):
 
     if guest_name:
         # Check if the guest name is already in the list of guests
-        if any(guest.name == guest_name for guest in st.session_state.guests):
-            st.error("This name is already taken. Please choose a different name.")
-            return None  # Return early to prevent further processing
-
+        st.success(f"Hello, {guest_name}!, Now goodbye please enter name of next guest")
         # Create a Guest object
         guest = Guest(guest_name)
         st.write(f"Hello, {guest.name}! Please select the items you ordered:")
