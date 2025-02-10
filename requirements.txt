@@ -4,4 +4,4 @@ pillow==11.1.0
 google-generativeai==0.8.4
 numpy==2.2.2
 click==8.1.8
-protobuf==4.0.0
+protobuf==3.20.0
