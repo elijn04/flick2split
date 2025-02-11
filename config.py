@@ -1,7 +1,4 @@
-import os
-from dotenv import load_dotenv
+import streamlit as st
 
-load_dotenv()  # Load environment variables from .env file
-
-API_KEY = os.getenv('GEMINI_API_KEY')
+api_key = st.secrets["api"]["GEMINI_API_KEY"]
 
