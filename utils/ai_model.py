@@ -1,11 +1,9 @@
 import google.generativeai as genai
-import os
-from config import API_KEY
 import streamlit as st
+from config import API_KEY
 
-# Configure API key (this runs once)
-os.environ["API_KEY"] = API_KEY
-genai.configure(api_key=os.environ["API_KEY"])
+# Configure the model directly with the API key
+genai.configure(api_key=API_KEY)
 
 # Cache the model initialization
 @st.cache_resource
