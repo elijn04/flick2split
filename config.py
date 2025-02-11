@@ -1,4 +1,10 @@
-import streamlit as st
+import os
 
-API_KEY = st.secrets['GEMINI_API_KEY']
+# Get API key directly from environment variable
+API_KEY = os.getenv('GEMINI_API_KEY')
+
+if not API_KEY:
+    raise ValueError(
+        "GEMINI_API_KEY environment variable is not set"
+    )
    
