@@ -24,4 +24,4 @@ build/
 *.egg-info/ 
 
 #api keys
-secrets.toml
+.streamlit/secrets.toml

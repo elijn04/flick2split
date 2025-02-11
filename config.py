@@ -1,4 +1,5 @@
 import streamlit as st
 
-api_key = st.secrets["api"]["GEMINI_API_KEY"]
+# Use uppercase for constant
+API_KEY = st.secrets["api"]["GEMINI_API_KEY"]
 
