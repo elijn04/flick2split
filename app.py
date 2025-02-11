@@ -9,12 +9,19 @@ st.set_page_config(
     page_title="Flick2Split"
 )
 
-# Hide sidebar with CSS
+# Hide sidebar completely with CSS
 st.markdown(
     """
     <style>
         [data-testid="collapsedControl"] {
             display: none
+        }
+        section[data-testid="stSidebar"] {
+            display: none;
+        }
+        /* Also hide any sidebar related elements */
+        .css-1d391kg {
+            display: none;
         }
     </style>
     """,
