@@ -22,6 +22,3 @@ config.py  # Hide API keys
 dist/
 build/
 *.egg-info/ 
-
-#api keys
-.streamlit/secrets.toml
