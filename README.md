@@ -14,7 +14,7 @@ The app leverages Google Gemini Flash 1.5 for text extraction and provides an in
 ## Technologies Used
 - **Frontend & Backend:** Python with Streamlit
 - **Text Recognition:** Google Gemini Flash 1.5
-- **Development Environment:** Started with Visual Studio Code (VS Code) and switched to Cursor
+- **Development Environment:** Started with Visual Studio Code (VS Code) and then switched to Cursor
 
 ## Installation
 1. **Clone the Repository:**

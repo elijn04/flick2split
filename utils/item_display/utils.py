@@ -9,9 +9,20 @@ def get_guest_name():
     Returns:
         str: The name of the guest, or None if no name is entered.
     """
-    guest_name = st.text_input("Enter your name:", key="name", placeholder="Enter name here")
+    # Check if we need to clear the name
+    default_value = "" if st.session_state.get('clear_name', False) else st.session_state.get('name_input', "")
     
-    # Strip any leading/trailing whitespace and format the name
+    # Clear the flag after using it
+    if 'clear_name' in st.session_state:
+        del st.session_state.clear_name
+    
+    guest_name = st.text_input(
+        "Enter your name:", 
+        value=default_value,
+        key="name_input",
+        placeholder="Enter name here"
+    )
+    
     if guest_name:
         guest_name = guest_name.strip().title()
         return guest_name
@@ -58,11 +69,6 @@ def display_items_for_selection(guest_name, items):
 def handle_submission(guest, selected_items, updated_data):
     """
     Handle the submission of selected items by updating the session state and removing selected items.
-
-    Args:
-        guest (Guest): The Guest object representing the current guest.
-        selected_items (list): A list of selected items.
-        updated_data (dict): The updated receipt data.
     """
     # Add the guest to the session state
     st.session_state.guests.append(guest)
@@ -84,7 +90,10 @@ def handle_submission(guest, selected_items, updated_data):
                 break
 
     if selected_items:
-        st.rerun()  # Refresh the page for the next guest
+        # Set a flag to clear the name on next render
+        st.session_state.clear_name = True
+        st.session_state.form_submitted = False
+        st.rerun()
 
 def gather_user_data(updated_data):
     """

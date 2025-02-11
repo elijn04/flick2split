@@ -4,17 +4,21 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
 venv/
 .env
-.venv
 
 # IDE
-.idea/
 .vscode/
+.idea/
+*.swp
+.DS_Store
 
-# Secrets
-config.py
+# Project specific
+config.py  # Hide API keys
+*.log
+.streamlit/secrets.toml
 
-# OS
-.DS_Store 
+# Distribution / packaging
+dist/
+build/
+*.egg-info/ 

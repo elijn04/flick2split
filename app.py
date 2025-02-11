@@ -66,7 +66,7 @@ if st.session_state.image_file is not None:
             st.session_state.receipt_data = processed_receipt_data
             
             if st.button("Confirm Receipt"):
-                st.switch_page("pages/receipt_confirmation.py")
+                st.switch_page("pages/1_receipt_confirmation.py")
             
     except Exception as error:
         st.error(f"An error occurred: {error}")

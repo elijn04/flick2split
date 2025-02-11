@@ -64,16 +64,17 @@ else:
                 with col2:
                     # First show standard options 2-5
                     shares_choice = st.radio(
-                        "",
+                        "Number of shares",
                         options=["2", "3", "4", "5", "Custom"],
                         horizontal=True,
-                        key=f"choice_{item_key}"
+                        key=f"choice_{item_key}",
+                        label_visibility="collapsed"
                     )
                     
                     # If Custom is selected, show number input
                     if shares_choice == "Custom":
                         shares = st.number_input(
-                            "Enter number of sharers:",
+                            "Number of people sharing",
                             min_value=2,
                             max_value=20,
                             value=6,
@@ -112,7 +113,7 @@ else:
             shared_receipt['items'] = new_items
             st.session_state.shared_updated_receipt_data = shared_receipt
             if st.button("Continue →"):
-                st.switch_page("pages/item_display.py")
+                st.switch_page("pages/3_item_display.py")
 
         # Add some spacing
         for line in range(7):
@@ -120,7 +121,7 @@ else:
 
         # Navigation button at the very bottom
         if st.button("← Back"):
-            st.switch_page("pages/receipt_confirmation.py")
+            st.switch_page("pages/1_receipt_confirmation.py")
 
     elif shared_items_response == "No":
         # If no shared items, just copy the original receipt data
@@ -129,11 +130,11 @@ else:
         )
         st.session_state.shared_items = []
         if st.button("Continue"):
-            st.switch_page("pages/item_display.py") 
+            st.switch_page("pages/3_item_display.py") 
 
         for line in range(16):
             st.write("")
 
         # Navigation button at the very bottom
         if st.button("← Back"):
-            st.switch_page("pages/receipt_confirmation.py")
+            st.switch_page("pages/1_receipt_confirmation.py")
