@@ -6,7 +6,9 @@ import time
 
 # Set page config must be the first Streamlit command
 st.set_page_config(
-    page_title="Flick2Split"
+    page_title="Flick2Split",
+    #add favicon
+    page_icon="assets/logo.png"
 )
 
 # Hide sidebar completely with CSS

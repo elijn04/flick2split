@@ -22,7 +22,7 @@ def ai_return(preprocessed_image):
         "Store Name": "",
         "Date": "",
         "Time": "",
-        "Items": [
+        "Items": [ 
             {"Name": "", "Quantity": "", "Price": ""}
         ],
         "Subtotal": "",
