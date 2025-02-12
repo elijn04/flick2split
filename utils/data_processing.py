@@ -10,19 +10,23 @@ def parse_receipt_data(raw_data):
                 parsed_data['Time'] = line.split(': ')[1].strip('" ,')
             elif "Subtotal" in line:
                 value = line.split(': ')[1].strip('" ,')
-                if value.lower() != 'null' and value != '':
+                if value.lower() != 'null' and value.strip() != '':
+                    # Remove any currency symbols and commas before converting
+                    value = value.replace('$', '').replace(',', '').strip()
                     parsed_data['Subtotal'] = float(value)
                 else:
                     parsed_data['Subtotal'] = None
             elif "Tax" in line:
                 value = line.split(': ')[1].strip('" ,')
-                if value.lower() != 'null' and value != '':
+                if value.lower() != 'null' and value.strip() != '':
+                    value = value.replace('$', '').replace(',', '').strip()
                     parsed_data['Tax'] = float(value)
                 else:
                     parsed_data['Tax'] = None
             elif "Total" in line:
                 value = line.split(': ')[1].strip('" ,')
-                if value.lower() != 'null' and value != '':
+                if value.lower() != 'null' and value.strip() != '':
+                    value = value.replace('$', '').replace(',', '').strip()
                     parsed_data['Total'] = float(value)
                 else:
                     parsed_data['Total'] = None
@@ -37,26 +41,34 @@ def extract_items(raw_data):
     items_data = raw_data[items_start:items_end].strip()
 
     item_list = []
-    # Process each item block, ignoring empty lines and blocks
     for item in items_data.split('},'):
         if item.strip():  # Check if the item block is not empty
             item = item.strip("{}, \n")
             item_dict = {}
             for detail in item.split(','):
-                key, value = detail.split(':')
-                key = key.strip('" ')
-                value = value.strip('" ')
-                if key == 'Price':
-                    if value.lower() != 'null' and value != '':
-                        value = float(value)  # Convert price to float
-                    else:
-                        value = None
-                elif key == 'Quantity':
-                    if value.lower() != 'null' and value != '':
-                        value = int(value)  # Convert quantity to integer
-                    else:
-                        value = 1 #if there is an item value must be 1
-                item_dict[key] = value
+                try:
+                    key, value = detail.split(':')
+                    key = key.strip('" ')
+                    value = value.strip('" ')
+                    if key == 'Price':
+                        if value.lower() != 'null' and value.strip() != '':
+                            # Remove any currency symbols and commas before converting
+                            value = value.replace('$', '').replace(',', '').strip()
+                            value = float(value)
+                        else:
+                            value = None
+                    elif key == 'Quantity':
+                        if value.lower() != 'null' and value.strip() != '':
+                            value = int(value)
+                        else:
+                            value = 1  # if there is an item value must be 1
+                    item_dict[key] = value
+                except ValueError as e:
+                    print(f"Error processing detail: {detail}")
+                    print(f"Error: {e}")
+                except Exception as e:
+                    print(f"Unexpected error processing detail: {detail}")
+                    print(f"Error: {e}")
             item_list.append(item_dict)
 
     return item_list
